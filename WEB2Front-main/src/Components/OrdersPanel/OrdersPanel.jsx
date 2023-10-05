@@ -91,20 +91,21 @@ export default function OrdersPanel() {
     return <div>Loading</div>
   }
   
-  console.log(data4.orderQuery.newOrders);
+console.log(data3.orderQuery.undeliveredOrders)
   return (
   <React.Fragment>
     <Navbar/>
     <CssBaseline/>
     {!isAdmin && !isBuyer && data4.orderQuery !== null && data5.orderQuery !== null  &&
-    <Orders orders={data4.orderQuery.newOrders ? data4.orderQuery.newOrders : ""} 
-    undelivered={true} header={"Undelivered orders"} isBuyer={isBuyer} handleUpdateOrders = {handleUpdateOrders}/> &&
-    <Orders orders={data5.orderQuery.oldOrders ? data5.orderQuery.oldOrders : ""}/>}
+   <> <Orders orders = {data4.orderQuery.newOrders} 
+    undelivered={true} header={"Undelivered orders"} isBuyer={isBuyer} handleUpdateOrders = {handleUpdateOrders}/> 
+    <Orders orders={data5.orderQuery.oldOrders ? data5.orderQuery.oldOrders : ""}/></>}
     
     {isBuyer && data2.orderQuery !== null && data3.orderQuery !== null && 
-    (<Orders orders={data3.orderQuery.undeliveredOrders ? data3.orderQuery.undeliveredOrders : ""} 
-    undelivered={true} header={"Undelivered orders"} isBuyer={isBuyer} handleUpdateOrders = {handleUpdateOrders}/> &&
-    <Orders orders={data2.orderQuery.userOrders ? data2.orderQuery.userOrders : ""}/>)}
+    (
+    <><Orders orders={data3.orderQuery.undeliveredOrders ? data3.orderQuery.undeliveredOrders : ""} 
+    undelivered={true} header={"Undelivered orders"} isBuyer={isBuyer} handleUpdateOrders = {handleUpdateOrders}/>
+    <Orders orders={data2.orderQuery.userOrders ? data2.orderQuery.userOrders : ""}/></>)}
     
     {isAdmin && data1.orderQuery !== null && <Orders orders={data1.orderQuery.orders ? data1.orderQuery.orders : "" }/>}
     

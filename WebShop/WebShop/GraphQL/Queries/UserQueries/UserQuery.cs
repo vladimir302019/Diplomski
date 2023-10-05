@@ -32,7 +32,7 @@ namespace WebShop.GraphQL.Queries.UserQueries
                     return await userService.GetAllUnactivatedSellers();
                 }
                 );
-            FieldAsync<ListGraphType<UserType>>(
+            FieldAsync<UserType>(
                 name: "user",
                 arguments: new QueryArguments(new QueryArgument<LongGraphType> { Name = "id" }),
                 resolve: async context =>

@@ -7,12 +7,13 @@ import ProfileFormImage from './ProfileFormImage';
 import MyModal from './Modal/Modal';
 import Navbar from '../Navbar/Navbar';
 import { updateUserAction, uploadImageAction, changePasswordAction } from '../../Store/userSlice';
-
+import { UPDATE_USER } from '../../GraphQL/userMutations';
+import { useMutation } from '@apollo/client';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const imageInput = useRef(null);
-  const user = useSelector((state) => state.user.user);
+  let user = useSelector((state) => state.user.user);
   const imageUrl = useSelector((state) => state.user.imageUrl);
   const defaultImage = process.env.PUBLIC_URL + './no-image.jpg'
 
@@ -24,9 +25,6 @@ const ProfilePage = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   
-
-
-
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -107,39 +105,44 @@ const ProfilePage = () => {
   const dateChangeHandler = (value) => {
     setDate(value);
   }
+  
+  const [updateProfile,{data, loading, error}] = useMutation(UPDATE_USER);
 
   const submitHandler = (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const name = formData.get("name");
-    const address = formData.get("address");
-    const email = formData.get("email");
-    const birthdate = date.toISOString();
-    const username = formData.get('username');
+    const name1 = formData.get("name");
+    const address1 = formData.get("address");
+    const email1 = formData.get("email");
+    const birthdate1 = date.toISOString().split('T')[0];
+    const username1 = formData.get('username');
 
-    if (!name || !address || !email || !birthdate || !username) {
+    if (!name1 || !address1 || !email1 || !birthdate1 || !username1) {
       return;
     }
+    updateProfile({variables:  {address: address1, birthDate: birthdate1, email: email1, id: user.id, fullname: name1, username: username1  }})
+    .then(() => { setEditable(false); setIsSwitched(false); })
+    
+    // const data = new FormData();
+    // data.append("fullName", name);
+    // data.append("username", username);
+    // data.append("email", email);
 
-    const data = new FormData();
-    data.append("fullName", name);
-    data.append("username", username);
-    data.append("email", email);
+    // if (date !== null) {
+    //   data.append("birthdate", birthdate);
+    // }
+    // data.append("address", address);
 
-    if (date !== null) {
-      data.append("birthdate", birthdate);
-    }
-    data.append("address", address);
-
-    dispatch(updateUserAction(data))
-      .unwrap()
-      .then(() => { setEditable(false); setIsSwitched(false) })
-      .catch((error) => {
-        console.error("Update error: ", error);
-      });
+    // dispatch(updateUserAction(data))
+    //   .unwrap()
+    //   .then(() => { setEditable(false); setIsSwitched(false) })
+    //   .catch((error) => {
+    //     console.error("Update error: ", error);
+    //   });
   }
 
+  
   if (user != null) {
     return (
       <div>
